@@ -1,33 +1,17 @@
 #!/sbin/sh
+# Diffusion Installer Backend (DO NOT CHANGE)
+# osm0sis @ xda-developers
 
-#################
-# Initialization
-#################
+# avoid forced Magisk update-binary replacement breakage
+# see customize.sh for what was previously update-binary
 
-umask 022
+[ -z $TMPDIR ] && TMPDIR=/dev/tmp;
 
-# echo before loading util_functions
-ui_print() { echo "$1"; }
+rm -rf $TMPDIR;
+mkdir -p $TMPDIR;
+cd $TMPDIR;
 
-require_new_magisk() {
-  ui_print "*******************************"
-  ui_print " Please install Magisk v20.4+! "
-  ui_print "*******************************"
-  exit 1
-}
+unzip -o "$3" customize.sh;
 
-#########################
-# Load util_functions.sh
-#########################
+. $TMPDIR/customize.sh;
 
-OUTFD=$2
-ZIPFILE=$3
-
-mount /data 2>/dev/null
-
-[ -f /data/adb/magisk/util_functions.sh ] || require_new_magisk
-. /data/adb/magisk/util_functions.sh
-[ $MAGISK_VER_CODE -lt 20400 ] && require_new_magisk
-
-install_module
-exit 0
